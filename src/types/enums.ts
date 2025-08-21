@@ -1,7 +1,7 @@
-export enum FilterStatus  {
+export enum FilterStatus {
   All = 'all',
   Active = 'active',
-  Completed = 'completed'
+  Completed = 'completed',
 }
 
 export enum ErrorType {
