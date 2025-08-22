@@ -19,25 +19,25 @@ export const App: React.FC = () => {
     setCurrentError('');
   };
 
-  const loadTodos = async () => {
-    try {
-      setIsLoading(true);
-      const data: Todo[] = await getTodos();
-
-      setPreparedTodos(data);
-    } catch (error) {
-      setCurrentError(ErrorType.Load);
-      setTimeout(() => {
-        handleHideError();
-      }, 3000);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   useEffect(() => {
+    const loadTodos = async () => {
+      try {
+        setIsLoading(true);
+        const data: Todo[] = await getTodos();
+
+        setPreparedTodos(data);
+      } catch (error) {
+        setCurrentError(ErrorType.Load);
+        setTimeout(() => {
+          handleHideError();
+        }, 3000);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
     loadTodos();
-  }, []);
+  }, [currentError]);
 
   if (!USER_ID) {
     return <UserWarning />;
@@ -81,7 +81,9 @@ export const App: React.FC = () => {
           {/* this button should have `active` class only if all todos are completed */}
           <button
             type="button"
-            className="todoapp__toggle-all active"
+            className={classNames('todoapp__toggle-all', {
+              active: quantityActiveTasks() === 0,
+            })}
             data-cy="ToggleAllButton"
           />
 
@@ -185,6 +187,7 @@ export const App: React.FC = () => {
               type="button"
               className="todoapp__clear-completed"
               data-cy="ClearCompletedButton"
+              disabled={quantityActiveTasks() === preparedTodos.length}
             >
               Clear completed
             </button>
